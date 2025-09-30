@@ -34,13 +34,6 @@ else
     echo -e "${GREEN}✓ Multipass est installé${NC}"
 fi
 
-# Demander l'email pour SSH
-echo ""
-read -p "Entrez votre adresse email pour les clés SSH: " email
-if [ -z "$email" ]; then
-    email="user@example.com"
-    echo -e "${YELLOW}Email par défaut utilisé: $email${NC}"
-fi
 
 # Vérifier si l'instance existe déjà
 echo ""
@@ -173,7 +166,7 @@ touch ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 
 # Génération clé SSH pour GitLab
-ssh-keygen -t ed25519 -C "EMAIL_PLACEHOLDER" -f ~/.ssh/id_ed25519 -N "" >/dev/null 2>&1
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N "" >/dev/null 2>&1
 
 # Configuration GitLab
 cat > ~/.ssh/config << EOL
@@ -213,9 +206,6 @@ echo "Ajoutez cette clé dans GitLab: Settings > SSH Keys"
 echo ""
 EOFSCRIPT
 
-# Remplacer l'email dans le script
-sed -i.bak "s/EMAIL_PLACEHOLDER/$email/g" /tmp/setup-multipass.sh
-rm /tmp/setup-multipass.sh.bak
 
 # Transférer et exécuter le script
 echo ""
@@ -246,7 +236,7 @@ echo ""
 echo -e "${YELLOW}[9/10] Vérification de votre clé SSH locale...${NC}"
 if [ ! -f ~/.ssh/id_ed25519 ]; then
     echo -e "${YELLOW}Génération d'une clé SSH locale...${NC}"
-    ssh-keygen -t ed25519 -C "$email" -f ~/.ssh/id_ed25519 -N ""
+    ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
     echo -e "${GREEN}✓ Clé SSH créée${NC}"
 else
     echo -e "${GREEN}✓ Clé SSH existe déjà${NC}"

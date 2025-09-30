@@ -19,13 +19,6 @@ try {
     exit 1
 }
 
-# Demander l'email pour SSH
-Write-Host ""
-$email = Read-Host "Entrez votre adresse email pour les clés SSH"
-if ([string]::IsNullOrWhiteSpace($email)) {
-    $email = "user@example.com"
-    Write-Host "Email par défaut utilisé: $email" -ForegroundColor Yellow
-}
 
 # Vérifier si l'instance existe déjà
 Write-Host ""
@@ -157,7 +150,7 @@ touch ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 
 # Génération clé SSH pour GitLab
-ssh-keygen -t ed25519 -C "$email" -f ~/.ssh/id_ed25519 -N "" >/dev/null 2>&1
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N "" >/dev/null 2>&1
 
 # Configuration GitLab
 cat > ~/.ssh/config << EOL
@@ -236,7 +229,7 @@ if (-not (Test-Path $sshKeyPath)) {
     if (-not (Test-Path $sshDir)) {
         New-Item -ItemType Directory -Path $sshDir | Out-Null
     }
-    ssh-keygen -t ed25519 -C $email -f $sshKeyPath -N '""'
+    ssh-keygen -t ed25519 -f $sshKeyPath -N '""'
     Write-Host "✓ Clé SSH créée" -ForegroundColor Green
 } else {
     Write-Host "✓ Clé SSH existe déjà" -ForegroundColor Green
